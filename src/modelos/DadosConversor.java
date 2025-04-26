@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DadosConversor {
+    private String apiKey = "SUA API KEY AQUI";
     private String moedaRequisito;
     private String moedaResposta;
     private final List<ConversorAPI> lista = new ArrayList<>();
 
     public void solicitarDados() throws IOException, InterruptedException {
-        String apiKey = "6f97b61a9ee66c3e3c8f58ff";
-        String url = "https://v6.exchangerate-api.com/v6/" + apiKey + "/pair/"
+        String url = "https://v6.exchangerate-api.com/v6/" + this.apiKey + "/pair/"
                 + this.moedaRequisito + "/" + this.moedaResposta;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
