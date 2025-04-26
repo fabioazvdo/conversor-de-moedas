@@ -16,11 +16,10 @@ import java.util.List;
 public class DadosConversor {
     private String moedaRequisito;
     private String moedaResposta;
-    private List<ConversorAPI> lista = new ArrayList<>();
-
+    private final List<ConversorAPI> lista = new ArrayList<>();
 
     public void solicitarDados() throws IOException, InterruptedException {
-        String apiKey = "SUA API KEY AQUI";
+        String apiKey = "6f97b61a9ee66c3e3c8f58ff";
         String url = "https://v6.exchangerate-api.com/v6/" + apiKey + "/pair/"
                 + this.moedaRequisito + "/" + this.moedaResposta;
         HttpClient client = HttpClient.newHttpClient();
@@ -47,8 +46,18 @@ public class DadosConversor {
         this.moedaResposta = moedaResposta;
     }
 
-    public List<ConversorAPI> getLista() {
-        return lista;
+    public String formatarHistorico() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Histórico de Conversões:\n");
+        for (int i = 0; i < lista.size(); i++) {
+            ConversorAPI conversao = lista.get(i);
+            sb.append(String.format("Conversão %d:\n", i + 1));
+            sb.append(String.format("  Moeda Requisitada: %s\n", moedaRequisito));
+            sb.append(String.format("  Moeda Resposta: %s\n", moedaResposta));
+            sb.append(String.format("  Valor Convertido: %.2f\n", conversao.conversionRate()));
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     public void novoArquivo() throws IOException {

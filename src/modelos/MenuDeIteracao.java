@@ -3,10 +3,16 @@ package modelos;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class MenuDeIteracao extends DadosConversor {
+public class MenuDeIteracao {
+    private final DadosConversor dadosConversor = new DadosConversor();
     private boolean saidaDoLoop = false;
     private final Scanner entrada = new Scanner(System.in);
 
+    private void processarConversao(Moeda moedaRequisito, Moeda moedaResposta) throws IOException, InterruptedException {
+        dadosConversor.setMoedaRequisito(moedaRequisito.name());
+        dadosConversor.setMoedaResposta(moedaResposta.name());
+        dadosConversor.solicitarDados();
+    }
 
     private String menu() {
         return """
@@ -32,39 +38,31 @@ public class MenuDeIteracao extends DadosConversor {
         System.out.println("Escolha uma opção:");
         String opcaoMenu = entrada.nextLine();
 
-        if (!opcaoMenu.matches("\\d+")) { // Verifica se a entrada contém apenas números
+        if (!opcaoMenu.matches("\\d+") || Integer.parseInt(opcaoMenu) < 1 || Integer.parseInt(opcaoMenu) > 8) {
             System.out.println("Opção inválida! Por favor, insira um número entre 1 e 8.");
             return;
         }
 
         switch (opcaoMenu) {
-            case "1" -> processarConversao("USD", "BRL");
-            case "2" -> processarConversao("BRL", "USD");
-            case "3" -> processarConversao("USD", "ARS");
-            case "4" -> processarConversao("ARS", "USD");
-            case "5" -> processarConversao("USD", "EUR");
-            case "6" -> processarConversao("EUR", "USD");
+            case "1" -> processarConversao(Moeda.USD, Moeda.BRL);
+            case "2" -> processarConversao(Moeda.BRL, Moeda.USD);
+            case "3" -> processarConversao(Moeda.USD, Moeda.ARS);
+            case "4" -> processarConversao(Moeda.ARS, Moeda.USD);
+            case "5" -> processarConversao(Moeda.USD, Moeda.EUR);
+            case "6" -> processarConversao(Moeda.EUR, Moeda.USD);
             case "7" -> {
                 System.out.println("Visualizando histórico...");
-                System.out.println(getLista());
-                novoArquivo();
+                System.out.println(dadosConversor.formatarHistorico());
+                dadosConversor.novoArquivo();
             }
             case "8" -> {
                 System.out.println("Saindo...");
                 saidaDoLoop = true;
             }
-            default -> System.out.println("Opção inválida! Por favor, insira um número entre 1 e 8.");
         }
-    }
-
-    private void processarConversao(String moedaRequisito, String moedaResposta) throws IOException, InterruptedException {
-        setMoedaRequisito(moedaRequisito);
-        setMoedaResposta(moedaResposta);
-        solicitarDados();
     }
 
     public boolean isSaidaDoLoop() {
         return saidaDoLoop;
     }
-
 }
