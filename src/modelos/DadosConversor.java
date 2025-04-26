@@ -10,12 +10,13 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-public class Conversor {
+public class DadosConversor {
     private String moedaRequisito;
     private String moedaResposta;
 
+
     public void solicitarDados() throws IOException, InterruptedException {
-        String apiKey = "SUA API KEY";
+        String apiKey = "SUAAPIKEY";
         String url = "https://v6.exchangerate-api.com/v6/" + apiKey + "/pair/"
                 + this.moedaRequisito + "/" + this.moedaResposta;
         HttpClient client = HttpClient.newHttpClient();
@@ -24,15 +25,13 @@ public class Conversor {
                 .build();
         HttpResponse<String> response = client
                 .send(request, HttpResponse.BodyHandlers.ofString());
-
-        String json = response.body();
-        System.out.println(json);
         Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .setPrettyPrinting()
                 .create();
-        ConversorAPI conversorAPI = gson.fromJson(json, ConversorAPI.class);
-        System.out.println(conversorAPI.toString());
+        ConversorAPI conversorAPI = gson.fromJson(response.body(), ConversorAPI.class);
+        System.out.println("Moeda requisitada: " + this.moedaRequisito + "\nMoeda resposta: " + this.moedaResposta);
+        System.out.println("Valor de conversão: " + conversorAPI.conversionRate());
     }
 
     public void setMoedaRequisito(String moedaRequisito) {

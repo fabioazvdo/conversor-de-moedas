@@ -1,13 +1,14 @@
-import modelos.Conversor;
+
+import modelos.MenuDeIteracao;
 
 import java.io.IOException;
 
 public class Principal {
     public static void main(String[] args) throws IOException, InterruptedException {
-        Conversor conversor = new Conversor();
-        conversor.setMoedaRequisito("USD");
-        conversor.setMoedaResposta("BRL");
-        conversor.solicitarDados();
+        MenuDeIteracao menu = new MenuDeIteracao();
+        while (!menu.isSaidaDoLoop()) {
+            menu.menuInicial();
+        }
 
     }
 }

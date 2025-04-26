@@ -1,4 +1,4 @@
 package modelos;
 
-public record ConversorAPI(String moedaInicial, String moedaFinal, double conversaoFinal) {
+public record ConversorAPI(String baseCode, String targetCode, double conversionRate) {
 }
