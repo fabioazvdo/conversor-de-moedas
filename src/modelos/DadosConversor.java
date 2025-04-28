@@ -14,28 +14,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DadosConversor {
-    private String apiKey = "SUA API KEY AQUI";
+    private final String apiKey = "SUA API KEY AQUI";
     private String moedaRequisito;
     private String moedaResposta;
     private final List<ConversorAPI> lista = new ArrayList<>();
 
-    public void solicitarDados() throws IOException, InterruptedException {
+    public void solicitarDados() {
         String url = "https://v6.exchangerate-api.com/v6/" + this.apiKey + "/pair/"
                 + this.moedaRequisito + "/" + this.moedaResposta;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .build();
-        HttpResponse<String> response = client
-                .send(request, HttpResponse.BodyHandlers.ofString());
-        Gson gson = new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setPrettyPrinting()
-                .create();
-        ConversorAPI conversorAPI = gson.fromJson(response.body(), ConversorAPI.class);
-        System.out.println("Moeda requisitada: " + this.moedaRequisito + "\nMoeda resposta: " + this.moedaResposta);
-        System.out.println("Valor de conversão: " + conversorAPI.conversionRate());
-        lista.add(conversorAPI);
+        try {
+            HttpResponse<String> response = client
+                    .send(request, HttpResponse.BodyHandlers.ofString());
+            Gson gson = new GsonBuilder()
+                    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                    .setPrettyPrinting()
+                    .create();
+            ConversorAPI conversorAPI = gson.fromJson(response.body(), ConversorAPI.class);
+            System.out.println("Moeda requisitada: " + this.moedaRequisito + "\nMoeda resposta: " + this.moedaResposta);
+            System.out.println("Valor de conversão: " + conversorAPI.conversionRate());
+            lista.add(conversorAPI);
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Erro ao solicitar dados: " + e.getMessage());
+        }
     }
 
     public void setMoedaRequisito(String moedaRequisito) {
@@ -60,11 +64,13 @@ public class DadosConversor {
         return sb.toString();
     }
 
-    public void novoArquivo() throws IOException {
+    public void novoArquivo() {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         try (FileWriter escritor = new FileWriter("historico.json")) {
             escritor.write(gson.toJson(lista));
+            System.out.println("Histórico salvo no arquivo 'historico.json'.");
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar o histórico no arquivo: " + e.getMessage());
         }
-        System.out.println("Histórico salvo no arquivo 'historico.json'.");
     }
 }

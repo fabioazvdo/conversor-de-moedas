@@ -1,6 +1,6 @@
 package modelos;
 
-import java.io.IOException;
+
 import java.util.Scanner;
 
 public class MenuDeIteracao {
@@ -8,7 +8,7 @@ public class MenuDeIteracao {
     private boolean saidaDoLoop = false;
     private final Scanner entrada = new Scanner(System.in);
 
-    private void processarConversao(Moeda moedaRequisito, Moeda moedaResposta) throws IOException, InterruptedException {
+    private void processarConversao(Moeda moedaRequisito, Moeda moedaResposta) {
         dadosConversor.setMoedaRequisito(moedaRequisito.name());
         dadosConversor.setMoedaResposta(moedaResposta.name());
         dadosConversor.solicitarDados();
@@ -33,7 +33,7 @@ public class MenuDeIteracao {
                 """;
     }
 
-    public void menuInicial() throws IOException, InterruptedException {
+    public void menuInicial() {
         System.out.println(menu());
         System.out.println("Escolha uma opção:");
         String opcaoMenu = entrada.nextLine();
